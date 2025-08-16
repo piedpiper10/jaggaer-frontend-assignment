@@ -1,0 +1,157 @@
+import { useState } from 'react';
+import { Box, Stack, IconButton, Typography, Button } from '@mui/material';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import React from 'react';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { gql } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+
+
+
+
+export const ADD_TO_CART = gql`
+  mutation AddToCart($productId: ID!, $quantity: Int!) {
+    addToCart(productId: $productId, quantity: $quantity) {
+      id
+      productId
+      quantity
+      product {
+        id
+        name
+        price
+      }
+    }
+  }
+`;
+
+export const GET_CART_COUNT = gql`
+  query GetCartCount {
+    cartCount
+  }
+`;
+
+export const GET_CART = gql`
+  query GetCart {
+    cart {
+      items {
+        id
+        productId
+        product {
+          id
+          name
+          price
+        }
+        quantity
+      }
+      count
+      total
+    }
+  }
+`;
+
+
+export default function NumberSpinner({ id }) {
+
+  const [value, setValue] = useState(1);
+
+  const [addToCart, { loading, error }] = useMutation(ADD_TO_CART, {
+    refetchQueries: [{ query: GET_CART }, { query: GET_CART_COUNT }], // refresh cart after adding
+  });
+
+  const handleAdd = () => {
+    addToCart({
+      variables: {
+        productId: id, // send product id
+        quantity: value,           // send quantity, can be dynamic
+      },
+    });
+    setValue(1);
+  };
+  const min = 0;        // change if needed
+  const max = undefined; // set a number to cap the value (e.g., 99)
+  const step = 1;
+
+
+  const inc = () => {
+    const next = value + step;
+    setValue(typeof max === 'number' ? Math.min(max, next) : next);
+  };
+
+  const dec = () => {
+    const next = value - step;
+    setValue(Math.max(min, next));
+  };
+
+  return (
+    <>
+      {error && <Typography color="error">{error.message}</Typography>}
+      <Stack direction="row" alignItems="center" spacing={1.25} sx={{ mt: 1.75 }}>
+        <Box
+          role="group"
+          aria-label="Quantity"
+          sx={{
+            display: 'flex',
+            alignItems: 'stretch',
+            width: 84,
+            height: 40,
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 1,
+            overflow: 'hidden',
+            bgcolor: 'background.paper',
+          }}
+        >
+          {/* Value display */}
+          <Box
+            role="status"
+            aria-live="polite"
+            sx={{
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              px: 1,
+            }}
+          >
+            <Typography sx={{ fontWeight: 700 }}>{value}</Typography>
+          </Box>
+
+          {/* Up/Down buttons */}
+          <Stack sx={{ borderLeft: '1px solid', borderColor: 'divider' }}>
+            <IconButton
+              aria-label="Increase"
+              size="small"
+              onClick={inc}
+              sx={{ borderRadius: 0, width: 32, height: 20 }}
+              disabled={typeof max === 'number' && value >= max}
+            >
+              <KeyboardArrowUpIcon fontSize="small" />
+            </IconButton>
+            <IconButton
+              aria-label="Decrease"
+              size="small"
+              onClick={dec}
+              sx={{ borderRadius: 0, width: 32, height: 20 }}
+              disabled={value <= min}
+            >
+              <KeyboardArrowDownIcon fontSize="small" />
+            </IconButton>
+          </Stack>
+        </Box>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<ShoppingCartIcon />}
+            sx={{ px: 3, py: 1.2, borderRadius: 2, textTransform: 'none' }}
+            onClick={handleAdd}
+            disabled={loading}
+          >
+            Add to Cart
+          </Button>
+        </Stack>
+      </Stack>
+    </>
+  );
+}

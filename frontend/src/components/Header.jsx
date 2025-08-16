@@ -1,0 +1,76 @@
+import React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useMatches } from "react-router-dom";
+import { usePageTitle } from './PageTitleContex';
+
+import { gql, useQuery } from "@apollo/client";
+import { Link } from 'react-router-dom';
+
+export const GET_CART_COUNT = gql`
+  query GetCartCount {
+    cartCount
+  }
+`;
+
+export default function Header() {
+  const { data, loading, error } = useQuery(GET_CART_COUNT,);
+  console.log("check for the data 123", data);
+
+  const matches = useMatches();
+  // // Find the deepest matched route with a title
+  const routeWithTitle = matches.find(m => m.handle?.title)?.handle.title;
+  const { title } = usePageTitle();
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static" sx={{ backgroundColor: 'primary.main' }}>
+        <Toolbar
+          sx={{
+            minHeight: { xs: 72, sm: 80 }, // taller than default
+            px: { xs: 2, sm: 3 }, // horizontal padding
+          }}
+        >
+          {/* Title */}
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, color: 'white', fontWeight: 'bold' }}
+          >
+            {routeWithTitle || title}
+          </Typography>
+
+          {/* Cart Icon */}
+          <Link to="/cart">
+            <IconButton size="large" aria-label="show cart items" color="inherit">
+              <Badge
+                badgeContent={loading ? "…" : data.cartCount}
+                color="error"          // red circle
+                overlap="circular"    // better for round icons
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }} // position
+                sx={{
+                  '& .MuiBadge-badge': {
+                    fontWeight: 700,
+                    fontSize: 14,
+                    minWidth: 20,
+                    height: 20,
+                    // transform: 'translate(6px, -8px)',
+                  },
+                }}
+              >
+                <ShoppingCartIcon sx={{ color: 'white', fontSize: 35, pt: 1 }} />
+              </Badge>
+            </IconButton>
+          </Link>
+        </Toolbar>
+      </AppBar>
+    </Box>
+  );
+}
+
+
