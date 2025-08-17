@@ -1,12 +1,12 @@
-import { productService } from './db/products.js';
-import { cartService } from './db/cart.js';
+import { productService } from "./db/products.js";
+import { cartService } from "./db/cart.js";
 
 export const resolvers = {
   Query: {
     product: (_, { id }) => productService.getProductById(id),
     products: () => productService.getProducts(),
     cart: () => cartService.getCart(),
-    cartCount: () => cartService.getCartCount()
+    cartCount: () => cartService.getCartCount(),
   },
 
   Mutation: {
@@ -20,10 +20,10 @@ export const resolvers = {
 
     clearCart: () => {
       return cartService.clearCart();
-    }
+    },
   },
 
   CartItem: {
-    product: (cartItem) => productService.getProductById(cartItem.productId)
-  }
+    product: (cartItem) => productService.getProductById(cartItem.productId),
+  },
 };
