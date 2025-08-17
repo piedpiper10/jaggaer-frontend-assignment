@@ -13,6 +13,7 @@ import {
   Rating
 } from '@mui/material';
 import NumberSpinner from './NumberSpinner';
+import ProductImageModal from './ProductImageModel';
 
 export default function ProductHero({
   imageUrl,        // single image URL reused for thumbs and main
@@ -27,6 +28,9 @@ export default function ProductHero({
   const mainImages = thumbs; // same source for main as well
 
   const [active, setActive] = useState(0);
+  const [open, setOpen] = React.useState(false);
+  const largeSrc = mainImages[active] ?? imageUrl;
+
 
   const priceFormatted = new Intl.NumberFormat("de-DE", {
     minimumFractionDigits: 2,
@@ -47,7 +51,7 @@ export default function ProductHero({
               {thumbs.map((src, i) => (
                 <Box
                   key={`${src}-${i}`}
-                  onClick={() => setActive(i)}
+                  onClick={() => { setActive(i), setOpen(true) }}
                   sx={{
                     width: { xs: 68, md: 160 },
                     height: { xs: 68, md: 170 },
@@ -75,6 +79,7 @@ export default function ProductHero({
               component="img"
               src={mainImages[active] ?? imageUrl}
               alt={`product image ${active + 1}`}
+              onClick={() => setOpen(true)}
               sx={{
                 width: '100%',
                 height: { xs: 300, sm: 380, md: 520 },
@@ -167,6 +172,13 @@ export default function ProductHero({
             {longDescription}
           </Typography>
         </Box>
+        {
+          open && <ProductImageModal open={open}
+            onClose={() => setOpen(false)}
+            src={largeSrc}
+            alt={`product image ${active + 1}`}
+            caption={name} />
+        }
       </Box>
     </>
   );

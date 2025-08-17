@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "server": "npm run start --prefix ../backend",
+    "dev": "concurrently \"npm start\" \"npm run server\""
   },
   "keywords": [],
   "author": "",
@@ -29,6 +31,7 @@
     "@babel/preset-react": "^7.27.1",
     "@eslint/js": "^9.33.0",
     "babel-loader": "^10.0.0",
+    "concurrently": "^9.2.0",
     "eslint": "^9.33.0",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.3.0",

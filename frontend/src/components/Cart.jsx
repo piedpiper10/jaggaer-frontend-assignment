@@ -211,7 +211,7 @@ export default function Cart() {
           sx: {
             borderRadius: 2, p: 1, maxWidth: 680, width: '100%',
             position: { lg: 'relative' },
-            top: { lg: '30%' },
+            top: { lg: '25%' },
           }
         }}
       >
