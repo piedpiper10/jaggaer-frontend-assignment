@@ -19,8 +19,6 @@ module.exports = {
       {
         test: /\.css$/, // import CSS from JS
         use: ["style-loader", "css-loader"],
-        // css-loader resolves @import/url()
-        // style-loader injects CSS into <style> tags at runtime
       },
     ],
   },
@@ -33,7 +31,13 @@ module.exports = {
     }),
   ],
   devServer: {
-    static: { directory: path.join(__dirname, "dist") }, // files to serve
+    static: [
+      {
+        directory: path.resolve(__dirname, "public"),
+        publicPath: "/", // serves /assets/smartphone.jpg
+        watch: true,
+      },
+    ],
     //historyApiFallback: true,
     historyApiFallback: {
       rewrites: [{ from: /./, to: "/index.html" }],
