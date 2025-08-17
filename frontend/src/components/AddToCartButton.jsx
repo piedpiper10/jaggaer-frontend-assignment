@@ -1,47 +1,8 @@
 import React from "react";
 import { Button } from "@mui/material";
 import { useMutation } from "@apollo/client";
-import { gql } from "@apollo/client";
+import { GET_CART, GET_CART_COUNT, ADD_TO_CART } from "../graphql/queries";
 
-export const ADD_TO_CART = gql`
-  mutation AddToCart($productId: ID!, $quantity: Int!) {
-    addToCart(productId: $productId, quantity: $quantity) {
-      id
-      productId
-      quantity
-      product {
-        id
-        name
-        price
-      }
-    }
-  }
-`;
-
-export const GET_CART = gql`
-  query GetCart {
-    cart {
-      items {
-        id
-        productId
-        product {
-          id
-          name
-          price
-        }
-        quantity
-      }
-      count
-      total
-    }
-  }
-`;
-
-export const GET_CART_COUNT = gql`
-  query GetCartCount {
-    cartCount
-  }
-`;
 
 export default function AddToCartButton({ product }) {
   const [addToCart, { loading, error }] = useMutation(ADD_TO_CART, {
@@ -51,8 +12,8 @@ export default function AddToCartButton({ product }) {
   const handleAdd = () => {
     addToCart({
       variables: {
-        productId: product.id, // send product id
-        quantity: 1,           // send quantity, can be dynamic
+        productId: product.id,
+        quantity: 1,
       },
     });
   };
@@ -61,7 +22,7 @@ export default function AddToCartButton({ product }) {
     <>
       <Button size="small" variant="contained" color="inherit"
         sx={{
-          fontSize: "0.75rem", // smaller text
+          fontSize: "0.75rem",
           padding: "4px 10px",
           fontWeight: "600px",
         }}

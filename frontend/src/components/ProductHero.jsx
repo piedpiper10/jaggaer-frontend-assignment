@@ -1,4 +1,3 @@
-// ProductHero.jsx
 import React, { useState, useMemo } from 'react';
 import {
   Box,
@@ -6,27 +5,22 @@ import {
   Stack,
   Typography,
   CardMedia,
-  Divider,
-  Button,
-  Chip,
-  IconButton,
   Rating
 } from '@mui/material';
-import NumberSpinner from './NumberSpinner';
+import AddProductToCart from './AddProductToCart';
 import ProductImageModal from './ProductImageModel';
 
 export default function ProductHero({
-  imageUrl,        // single image URL reused for thumbs and main
+  imageUrl,
   name,
   shortDescription,
-  price,
   longDescription,
+  price,
   rating,
   id
 }) {
   const thumbs = useMemo(() => [imageUrl, imageUrl, imageUrl], [imageUrl]);
-  const mainImages = thumbs; // same source for main as well
-
+  const mainImages = thumbs;
   const [active, setActive] = useState(0);
   const [open, setOpen] = React.useState(false);
   const largeSrc = mainImages[active] ?? imageUrl;
@@ -41,7 +35,6 @@ export default function ProductHero({
     <>
       <Box sx={{ width: '100%', bgcolor: 'background.default', px: "100px", py: "50px" }}>
         <Grid container spacing={{ xs: 2, md: 5 }} sx={{ alignItems: { md: 'center' } }}>
-          {/* Column 1: Thumbnails (same image repeated) */}
           <Grid item xs={12} md={2.5} sx={{ order: { xs: 2, md: 1 } }}>
             <Stack
               direction={{ xs: 'row', md: 'column' }}
@@ -97,13 +90,13 @@ export default function ProductHero({
             md={5}
             sx={{ order: { xs: 3, md: 3 }, alignSelf: 'flex-start' }}
           >
-            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', width: '100%' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: { xs: 300, sm: 380, md: 520 } }}>
               <Box>
-                <Typography variant="h4" fontWeight={800}>
+                <Typography variant="h6">
                   {name}
                 </Typography>
 
-                <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
+                <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5, fontSize: 16 }}>
                   {shortDescription}
                 </Typography>
 
@@ -112,74 +105,30 @@ export default function ProductHero({
                   value={rating}
                   precision={0.5}
                   readOnly
-                  sx={{ mt: 1.75 }}
+                  sx={{ mt: 2, mb: 3 }}
                 />
 
                 <Stack direction="column" spacing={1.25} sx={{ mt: 1.75 }}>
-                  <Typography variant="h4" fontWeight={800}>
+                  <Typography variant="h6" sx={{ mt: 3 }}>
                     {priceFormatted}
                   </Typography>
-                  <Typography sx={{ fontSize: "14px" }}>
+                  <span style={{ fontSize: 16, color: 'gray', margin: '0px' }}>
                     all prices incl. 10% taxes
-                  </Typography>
+                  </span>
                 </Stack>
               </Box>
-              <NumberSpinner id={id} />
+              <AddProductToCart id={id} />
             </Box>
           </Grid>
         </Grid>
       </Box>
-      <Box
-        component="section"
-        sx={{
-          bgcolor: 'grey.100',
-          borderTop: 1,
-          borderColor: 'divider',
-          py: { xs: 6, sm: 8 },
-        }}
-      >
-        <Box
-          sx={{
-            maxWidth: 1280,
-            ml: 10,
-            mb: 20,
-            px: { xs: 3, sm: 3, },
-          }}
-        >
-          {/* Heading */}
-          <Typography
-            variant="h6"
-            component="h2"
-            sx={{
-              fontWeight: 700,
-              letterSpacing: 0.2,
-              color: 'black',
-              mb: 2.5,
-            }}
-          >
-            Description
-          </Typography>
-
-          {/* Lead paragraph */}
-          <Typography
-            variant="body1"
-            sx={{
-              color: 'text.primary',
-              lineHeight: 1.8,
-              maxWidth: 1400,         // allow long single-line look but keep measure sane
-            }}
-          >
-            {longDescription}
-          </Typography>
-        </Box>
-        {
-          open && <ProductImageModal open={open}
-            onClose={() => setOpen(false)}
-            src={largeSrc}
-            alt={`product image ${active + 1}`}
-            caption={name} />
-        }
-      </Box>
+      {
+        open && <ProductImageModal open={open}
+          onClose={() => setOpen(false)}
+          src={largeSrc}
+          alt={`product image ${active + 1}`}
+          caption={name} />
+      }
     </>
   );
 }

@@ -1,8 +1,6 @@
 import React from "react";
-import { gql, useQuery } from '@apollo/client';
 import {
   Box,
-  Grid,
   Card,
   CardMedia,
   CardContent,
@@ -12,34 +10,19 @@ import {
   Rating,
   CssBaseline,
   Container,
+  CircularProgress,
 } from "@mui/material";
-
 import { useNavigate } from "react-router-dom";
 import AddToCartButton from "./AddToCartButton";
-
-
-
-const GET_PRODUCTS = gql`
-  query GetProducts {
-    products {
-      id
-      name
-      shortDescription
-      longDescription
-      price
-      imageUrl
-      rating
-    }
-  }
-`;
-
+import { GET_PRODUCTS } from "../graphql/queries";
+import { useQuery } from "@apollo/client";
 
 export default function () {
   const { loading, error, data } = useQuery(GET_PRODUCTS);
   const navigate = useNavigate();
-  if (loading) return <p>Loading users...</p>;
+  if (loading) return <CircularProgress />;
   if (error) return <p>Error: {error.message}</p>;
-  console.log("check for the data", data);
+
   return (
     <>
       <CssBaseline />
@@ -47,7 +30,10 @@ export default function () {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)", // ALWAYS 2 columns
+            gridTemplateColumns: {
+              xs: '1fr',
+              sm: 'repeat(2, 1fr)',
+            },
             gap: 4,
             alignItems: "stretch",
           }}
@@ -76,7 +62,7 @@ export default function () {
                 <Rating
                   name="read-only-rating"
                   value={p.rating}
-                  precision={0.5} // For half stars
+                  precision={0.5}
                   readOnly
                   sx={
                     {
@@ -89,7 +75,7 @@ export default function () {
               <CardActions sx={{ justifyContent: "flex-start" }}>
                 <Button size="small" variant="contained"
                   sx={{
-                    fontSize: "0.75rem", // smaller text
+                    fontSize: "0.75rem",
                     padding: "4px 10px",
                   }}
                   onClick={() => navigate(`/details/${p.id}`)}
@@ -102,8 +88,6 @@ export default function () {
       </Container>
     </>
   );
-
-
 }
 
 

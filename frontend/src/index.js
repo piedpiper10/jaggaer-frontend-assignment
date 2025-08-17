@@ -8,10 +8,10 @@ import {
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import Products from './components/Products';
 import { ApolloProvider } from '@apollo/client';
-import { client } from './apolloClient';
+import { client } from './graphql/apolloClient';
 import ProductDetailsPage from './components/ProductDetailsPage';
 import Cart from './components/Cart';
-import { PageTitleProvider } from './components/PageTitleContex';
+import { PageTitleProvider } from './context/PageTitleContex';
 
 const theme = createTheme();
 const router = createBrowserRouter([{

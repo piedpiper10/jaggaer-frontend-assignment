@@ -4,83 +4,36 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import React from 'react';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { gql } from "@apollo/client";
 import { useMutation } from "@apollo/client";
+import { GET_CART_COUNT, ADD_TO_CART, GET_CART } from '../graphql/queries';
 
-
-
-
-export const ADD_TO_CART = gql`
-  mutation AddToCart($productId: ID!, $quantity: Int!) {
-    addToCart(productId: $productId, quantity: $quantity) {
-      id
-      productId
-      quantity
-      product {
-        id
-        name
-        price
-      }
-    }
-  }
-`;
-
-export const GET_CART_COUNT = gql`
-  query GetCartCount {
-    cartCount
-  }
-`;
-
-export const GET_CART = gql`
-  query GetCart {
-    cart {
-      items {
-        id
-        productId
-        product {
-          id
-          name
-          price
-        }
-        quantity
-      }
-      count
-      total
-    }
-  }
-`;
-
-
-export default function NumberSpinner({ id }) {
-
-  const [value, setValue] = useState(1);
-
-  const [addToCart, { loading, error }] = useMutation(ADD_TO_CART, {
-    refetchQueries: [{ query: GET_CART }, { query: GET_CART_COUNT }], // refresh cart after adding
-  });
+export default function AddProductToCart({ id }) {
+  const [value, setValue] = useState(0);
+  const [addToCart, { loading, error }] = useMutation(ADD_TO_CART, { refetchQueries: [{ query: GET_CART_COUNT }, { query: GET_CART }] })
 
   const handleAdd = () => {
     addToCart({
       variables: {
-        productId: id, // send product id
-        quantity: value,           // send quantity, can be dynamic
+        productId: id,
+        quantity: value,
       },
     });
-    setValue(1);
+    setValue(0);
   };
-  const min = 0;        // change if needed
-  const max = undefined; // set a number to cap the value (e.g., 99)
+  const MIN_QUANTITY = 0;
+  const MAX_QUANTITY = 100;
   const step = 1;
 
 
   const inc = () => {
     const next = value + step;
-    setValue(typeof max === 'number' ? Math.min(max, next) : next);
+    setValue((prev) => (prev < MAX_QUANTITY ? prev + 1 : prev))
+
   };
 
   const dec = () => {
     const next = value - step;
-    setValue(Math.max(min, next));
+    setQuantity((prev) => (prev > MIN_QUANTITY ? prev - 1 : prev));
   };
 
   return (
@@ -102,7 +55,6 @@ export default function NumberSpinner({ id }) {
             bgcolor: 'background.paper',
           }}
         >
-          {/* Value display */}
           <Box
             role="status"
             aria-live="polite"
@@ -117,14 +69,13 @@ export default function NumberSpinner({ id }) {
             <Typography sx={{ fontWeight: 700 }}>{value}</Typography>
           </Box>
 
-          {/* Up/Down buttons */}
           <Stack sx={{ borderLeft: '1px solid', borderColor: 'divider' }}>
             <IconButton
               aria-label="Increase"
               size="small"
               onClick={inc}
               sx={{ borderRadius: 0, width: 32, height: 20 }}
-              disabled={typeof max === 'number' && value >= max}
+              disabled={value >= MAX_QUANTITY}
             >
               <KeyboardArrowUpIcon fontSize="small" />
             </IconButton>
@@ -133,7 +84,7 @@ export default function NumberSpinner({ id }) {
               size="small"
               onClick={dec}
               sx={{ borderRadius: 0, width: 32, height: 20 }}
-              disabled={value <= min}
+              disabled={value <= MIN_QUANTITY}
             >
               <KeyboardArrowDownIcon fontSize="small" />
             </IconButton>

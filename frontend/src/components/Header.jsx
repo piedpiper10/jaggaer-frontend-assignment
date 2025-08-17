@@ -7,16 +7,11 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useMatches } from "react-router-dom";
-import { usePageTitle } from './PageTitleContex';
+import { usePageTitle } from '../context/PageTitleContex';
 
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Link } from 'react-router-dom';
-
-export const GET_CART_COUNT = gql`
-  query GetCartCount {
-    cartCount
-  }
-`;
+import { GET_CART_COUNT } from '../graphql/queries';
 
 export default function Header() {
   const { data, loading, error } = useQuery(GET_CART_COUNT,);

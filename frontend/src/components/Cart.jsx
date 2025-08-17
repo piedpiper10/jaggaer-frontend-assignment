@@ -1,6 +1,6 @@
-// Cart.jsx
+
 import React from "react";
-import { useQuery, gql, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import {
   CircularProgress,
   Box,
@@ -16,60 +16,21 @@ import {
   DialogContent,
   DialogActions
 } from "@mui/material";
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteIcon from "@mui/icons-material/Delete";
+import { GET_CART, REMOVE_FROM_CART, GET_CART_COUNT, CLEAR_CART } from '../graphql/queries';
 
-// GraphQL Query
-const GET_CART = gql`
-  query GetCart {
-    cart {
-      items {
-        id
-        productId
-        product {
-          id
-          name
-          price
-          shortDescription
-        }
-        quantity
-      }
-      count
-      total
-    }
-  }
-`;
-
-export const REMOVE_FROM_CART = gql`
-  mutation RemoveFromCart($itemId: ID!) {
-    removeFromCart(itemId: $itemId)
-  }
-`;
-
-export const GET_CART_COUNT = gql`
-  query GetCartCount {
-    cartCount
-  }
-`;
-
-const CLEAR_CART = gql`
-  mutation ClearCart {
-    clearCart
-  }
-`;
 
 export default function Cart() {
   const [open, setOpen] = React.useState(false);
   const { loading, error, data } = useQuery(GET_CART);
-  const [removeFromCart, { load, err }] = useMutation(REMOVE_FROM_CART, {
+  const [removeFromCart, deleteResponse] = useMutation(REMOVE_FROM_CART, {
     refetchQueries: [{ query: GET_CART }, { query: GET_CART_COUNT }], // refresh cart after deletion
   });
 
-  const [clearCart, response] = useMutation(CLEAR_CART, { refetchQueries: [{ query: GET_CART }, { query: GET_CART_COUNT }] })
+  const [clearCart, cartResponse] = useMutation(CLEAR_CART, { refetchQueries: [{ query: GET_CART }, { query: GET_CART_COUNT }] })
 
-  if (loading || response.loading || response.loading) return <CircularProgress />;
-  if (error || err || response.error) return <Typography color="error">Error: {error.message || err.message}</Typography>;
-
-
+  if (loading || cartResponse.loading) return <CircularProgress />;
+  if (error || deleteResponse.error || cartResponse.error) return <Typography color="error">Error: {error.message || deleteResponse.message || cartResponse.message}</Typography>;
 
   const handleDelete = (itemId) => {
     removeFromCart({ variables: { itemId } });
@@ -100,31 +61,27 @@ export default function Cart() {
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'column',
-          pt: { xs: 6, sm: 10 },
+          pt: { xs: 6, sm: 8 },
           mx: 'auto'
         }}
       >
         <Stack
-          // direction="row"
-          // alignItems="center"
-          // justifyContent="space-between"
-          // sx={{ mb: 2, p: 3 }}
           sx={{ width: 'min(900px, 95vw)', pt: 2 }}
         >
           {/* Clear the cart action like the screenshot (text on the right) */}
           <Box sx={{ textAlign: "end" }}>
             <Button
               variant="text"
-              color="inherit"
+              color='text.secondary'
               onClick={clearCartHandler}
               disabled={items.length === 0}
               sx={{ textTransform: 'none', fontSize: '16px' }}
             >
+
               Clear the cart
             </Button>
           </Box>
         </Stack>
-
 
         <Grid
           container
@@ -143,23 +100,23 @@ export default function Cart() {
                 <CardContent sx={{ p: 3 }}>
                   <Stack direction="row" alignItems="flex-start" spacing={2}>
                     <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
+                      <Typography variant="h4" sx={{ fontWeight: 500 }}>
                         {item.product.name}
                       </Typography>
-                      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                      <Typography variant="body1" color="text.secondary" sx={{ mb: 5, fontSize: 16 }}>
                         {item.product.shortDescription}
                       </Typography>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                      <Typography variant="body2" sx={{ fontSize: 16, color: 'grey.900' }}>
                         Quantity: {item.quantity}
                       </Typography>
                     </Box>
 
                     <IconButton aria-label="delete"
                       onClick={() => handleDelete(item.id)}
-                      disabled={load}
-                      color="error"
+                      disabled={deleteResponse.loading}
+                      color="gray"
                     >
-                      <DeleteOutlineIcon />
+                      <DeleteIcon />
                     </IconButton>
                   </Stack>
                 </CardContent>
@@ -171,7 +128,7 @@ export default function Cart() {
 
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 1 }}>
         <Typography
-          component="p"
+          variant="h4"
           sx={{
             fontSize: { xs: 24, sm: 24 },
             fontWeight: 500,
@@ -188,6 +145,7 @@ export default function Cart() {
 
         <Button
           variant="contained"
+          color="primary"
           size="large"
           onClick={handlePurchase}
           sx={{

@@ -1,4 +1,3 @@
-// PageTitleContext.js
 import { createContext, useContext, useState } from "react";
 import React from "react";
 
