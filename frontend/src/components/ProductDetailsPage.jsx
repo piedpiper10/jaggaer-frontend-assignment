@@ -40,8 +40,8 @@ export default function ProductDetailsPage() {
         <Box
           sx={{
             maxWidth: 1280,
-            ml: 10,
-            mb: 20,
+            ml: { md: 10, lg: 10 },
+            mb: { md: 20, lg: 20 },
             px: { xs: 3, sm: 3, },
           }}
         >

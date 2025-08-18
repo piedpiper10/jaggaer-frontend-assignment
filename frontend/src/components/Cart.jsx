@@ -156,6 +156,7 @@ export default function Cart() {
             letterSpacing: 1,
             margin: 2
           }}
+          disabled={items.length === 0}
         >
           PURCHASE
         </Button>
