@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GET_CART, REMOVE_FROM_CART, GET_CART_COUNT, CLEAR_CART } from '../graphql/queries';
+import { Link } from "react-router-dom";
 
 
 export default function Cart() {
@@ -186,13 +187,15 @@ export default function Cart() {
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Box sx={{ flex: 1 }} />
-          <Button
-            variant="text"
-            color="primary"
-            sx={{ fontWeight: 700, textTransform: 'none' }}
-          >
-            GO BACK HOME
-          </Button>
+          <Link to="/">
+            <Button
+              variant="text"
+              color="primary"
+              sx={{ fontWeight: 700, textTransform: 'none' }}
+            >
+              GO BACK HOME
+            </Button>
+          </Link>
         </DialogActions>
       </Dialog>
     </>

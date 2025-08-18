@@ -15,23 +15,20 @@ import { GET_CART_COUNT } from '../graphql/queries';
 
 export default function Header() {
   const { data, loading, error } = useQuery(GET_CART_COUNT,);
-  console.log("check for the data 123", data);
 
   const matches = useMatches();
-  // // Find the deepest matched route with a title
   const routeWithTitle = matches.find(m => m.handle?.title)?.handle.title;
   const { title } = usePageTitle();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: 'primary.main' }}>
+      <AppBar position="static" sx={{ backgroundColor: 'primary.main' }} >
         <Toolbar
           sx={{
             minHeight: { xs: 72, sm: 80 }, // taller than default
             px: { xs: 2, sm: 3 }, // horizontal padding
           }}
         >
-          {/* Title */}
           <Typography
             variant="h6"
             component="div"
@@ -40,13 +37,12 @@ export default function Header() {
             {routeWithTitle || title}
           </Typography>
 
-          {/* Cart Icon */}
           <Link to="/cart">
             <IconButton size="large" aria-label="show cart items" color="inherit">
               <Badge
                 badgeContent={loading ? "…" : data.cartCount}
-                color="error"          // red circle
-                overlap="circular"    // better for round icons
+                color="error"
+                overlap="circular"
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }} // position
                 sx={{
                   '& .MuiBadge-badge': {
