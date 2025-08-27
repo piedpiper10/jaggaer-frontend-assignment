@@ -2,50 +2,42 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: "./src/index.js", // where bundling starts
+  entry: "./src/index.js",
   output: {
-    path: path.resolve(__dirname, "dist"), // build folder
-    filename: "bundle.js", // output bundle name
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js",
     clean: true,
     publicPath: "/",
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/, // for JS/JSX files
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: "babel-loader", // runs Babel
-      },
-      {
-        test: /\.css$/, // import CSS from JS
-        use: ["style-loader", "css-loader"],
+        use: "babel-loader",
       },
     ],
   },
   resolve: {
-    extensions: [".js", ".jsx"], // allow imports without ext
+    extensions: [".js", ".jsx"],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./public/index.html", // base HTML template
+      template: "./public/index.html",
     }),
   ],
   devServer: {
     static: [
       {
         directory: path.resolve(__dirname, "public"),
-        publicPath: "/", // serves /assets/smartphone.jpg
+        publicPath: "/",
         watch: true,
       },
     ],
-    //historyApiFallback: true,
-    historyApiFallback: {
-      rewrites: [{ from: /./, to: "/index.html" }],
-      index: "index.html",
-    },
-    port: 3000,
-    hot: true, // Hot Module Replacement
-    open: true, // auto-open browser
+    historyApiFallback: true,
+    port: 3001,
+    hot: true,
+    open: true,
   },
-  mode: "development", // faster builds, better DX
+  mode: "development",
 };
