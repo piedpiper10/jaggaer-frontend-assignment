@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { GET_CART_COUNT } from '../graphql/queries';
 
 export default function Header() {
-  const { data, loading, error } = useQuery(GET_CART_COUNT,);
+  const { data, loading, error } = useQuery(GET_CART_COUNT);
 
   const matches = useMatches();
   const routeWithTitle = matches.find(m => m.handle?.title)?.handle.title;
