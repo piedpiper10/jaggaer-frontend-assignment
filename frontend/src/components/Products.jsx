@@ -17,7 +17,7 @@ import AddToCartButton from "./AddToCartButton";
 import { GET_PRODUCTS } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 
-export default function () {
+export default function Products() {
   const { loading, error, data } = useQuery(GET_PRODUCTS);
   const navigate = useNavigate();
   if (loading) return <CircularProgress />;

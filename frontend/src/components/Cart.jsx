@@ -45,8 +45,7 @@ export default function Cart() {
     setOpen(true)
   }
 
-  const { items, total, count } = data.cart;
-  console.log("check for the cart data7777", items);
+  const { items } = data.cart;
 
   let totalAmount = items.reduce((accu, ele) => {
     accu = accu + (ele.quantity * ele.product.price)

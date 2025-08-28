@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
-import { CircularProgress, Box, Typography, Container, Divider } from '@mui/material';
+import { CircularProgress, Box, Typography } from '@mui/material';
 import ProductHero from "./ProductHero";
 import { usePageTitle } from "../context/PageTitleContex";
 

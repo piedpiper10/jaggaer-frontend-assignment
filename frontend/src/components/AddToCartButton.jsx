@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import { GET_CART, GET_CART_COUNT, ADD_TO_CART } from "../graphql/queries";
 

@@ -4,7 +4,7 @@ import { Modal, Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 function ImageModal(props) {
-  const { open, onClose, src, alt, caption } = props;
+  const { open, onClose, src, alt } = props;
 
   return (
     <Modal

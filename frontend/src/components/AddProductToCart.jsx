@@ -22,18 +22,15 @@ export default function AddProductToCart({ id }) {
   };
   const MIN_QUANTITY = 0;
   const MAX_QUANTITY = 100;
-  const step = 1;
 
 
   const inc = () => {
-    const next = value + step;
     setValue((prev) => (prev < MAX_QUANTITY ? prev + 1 : prev))
 
   };
 
   const dec = () => {
-    const next = value - step;
-    setQuantity((prev) => (prev > MIN_QUANTITY ? prev - 1 : prev));
+    setValue((prev) => (prev > MIN_QUANTITY ? prev - 1 : prev));
   };
 
   return (
